@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:life_quest/Service/Auth_Service.dart';
 import 'package:life_quest/pages/HomePage.dart';
+import 'package:life_quest/pages/PhoneAuth.dart';
+import 'package:life_quest/pages/SingInPage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -16,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  AuthClass authClass = AuthClass();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,11 +40,16 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(
               height: 20,
             ),
-            buttonItem("assets/google.svg", "Войти через гугл", 25),
+            buttonItem("assets/google.svg", "Войти через гугл", 25, () async {
+              await authClass.googleSignIn(context);
+            }),
             SizedBox(
               height: 15,
             ),
-            buttonItem("assets/phone.svg", "Войти через телефон", 25),
+            buttonItem("assets/phone.svg", "Войти через телефон", 25, () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (builder) => PhoneAuthPage()));
+            }),
             SizedBox(
               height: 15,
             ),
@@ -63,11 +73,20 @@ class _SignUpPageState extends State<SignUpPage> {
                       color: Colors.white,
                       fontSize: 15,
                     )),
-                Text("Войти",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold)),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => const SingInPage()),
+                        (route) => false);
+                  },
+                  child: const Text("Войти",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold)),
+                ),
               ],
             )
           ],
@@ -100,9 +119,9 @@ class _SignUpPageState extends State<SignUpPage> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               gradient: LinearGradient(colors: [
-                Color(0xfffd746c),
+                Color.fromARGB(255, 108, 142, 253),
                 Color(0xffff9068),
-                Color(0xfffd746c)
+                Color.fromARGB(255, 108, 176, 253)
               ])),
           child: Center(
             child: Text(
@@ -116,32 +135,35 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget buttonItem(String image, String btnname, double size) {
-    return Container(
-      height: 60,
-      width: MediaQuery.of(context).size.width - 90,
-      child: Card(
-        color: Colors.black,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-            side: BorderSide(width: 1, color: Colors.grey)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              image,
-              height: size,
-              width: size,
-            ),
-            SizedBox(
-              width: 15,
-            ),
-            Text(btnname,
-                style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold)),
-          ],
+  Widget buttonItem(String image, String btnname, double size, Function onTap) {
+    return InkWell(
+      onTap: () => onTap(),
+      child: Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width - 90,
+        child: Card(
+          color: Colors.black,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              side: BorderSide(width: 1, color: Colors.grey)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                image,
+                height: size,
+                width: size,
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Text(btnname,
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
         ),
       ),
     );

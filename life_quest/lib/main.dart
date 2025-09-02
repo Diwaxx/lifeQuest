@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:life_quest/Service/Auth_Service.dart';
+import 'package:life_quest/pages/AddToDo.dart';
+import 'package:life_quest/pages/HomePage.dart';
 import 'package:life_quest/pages/SingInPage.dart';
 import 'package:life_quest/pages/SingUpPage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
@@ -41,22 +51,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
-  void signUp() async {
-    try {
-      await firebaseAuth.createUserWithEmailAndPassword(
-          email: "diwax@gmail.com", password: "123123");
-    } catch (e) {
-      print(e);
+  @override
+  void initState() {
+    super.initState();
+    checkLogin();
+  }
+
+  Widget currPage = SignUpPage();
+  AuthClass authClass = AuthClass();
+
+  void checkLogin() async {
+    String token = (await authClass.getToken());
+    if (token != "") {
+      setState(() {
+        currPage = HomePage();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SignUpPage(),
-    );
+    return MaterialApp(home: currPage);
   }
 }
