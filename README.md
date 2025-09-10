@@ -25,7 +25,7 @@ Backend: Firebase (Authentication, Firestore Database)
 Сборка: Gradle, Android SDK
 
 📸 Скриншоты
-<div align="center"> <img src="screenshots/login.jpg" width="200" alt="Экран входа"> <img src="screenshots/register.jpg" width="200" alt="Экран регистрации"> <img src="screenshots/notes_list.jpg" width="200" alt="Список заметок"> <img src="screenshots/add_note.jpg" width="200" alt="Добавление заметки"> </div>
+<div align="center">  <img src="screenshots/register.jpg" width="200" alt="Экран регистрации"> <img src="screenshots/notes_list.jpg" width="200" alt="Список заметок"> <img src="screenshots/add_note.jpg" width="200" alt="Добавление заметки"> </div>
 🚀 Установка и запуск
 Предварительные требования
 Установленный Flutter SDK (версия 3.13.9 или выше)
